@@ -1,4 +1,4 @@
-import os, openpyxl
+import os, openpyxl, shutil
 
 
 def rename_removing_0():
@@ -23,11 +23,13 @@ def rename_removing_0():
 os.chdir(r"H:\Downloads\Server Downloads\Complete\TV Shows (Kids)\Peppa Pig")  # change cwd to the desired directory
 dir = os.getcwd()
 abspath = os.path.abspath('.')  # define abspath
+
+"""
 file_list = [filename for filename in os.listdir(dir)]  # for each file in folder
 file_list.sort()
 for file in file_list:
     print(file)
-
+"""
 
 def excel_export(eps_list):     #### THIS FUNCTION IS THE EXPORT TO EXCEL  #####
     wb = openpyxl.Workbook()  # create excel workbook object
@@ -41,4 +43,28 @@ def excel_export(eps_list):     #### THIS FUNCTION IS THE EXPORT TO EXCEL  #####
         cell.value = v  # write the value (v) to the cell
     wb.save('peppa episodes.xlsx')  # save workbook as admin.xlsx
 
-excel_export(file_list) # creates an excel file with one column which is the names of the Peppa episodes
+# excel_export(file_list) # creates an excel file with one column which is the names of the Peppa episodes
+
+
+xls = r"H:\Downloads\Server Downloads\Complete\TV Shows (Kids)\Peppa Pig\Peppa episodes all matched up.xlsx"
+
+
+wb = openpyxl.load_workbook(xls)  # create excel workbook object
+sheet = wb.get_sheet_by_name('Sheet')
+
+originals = []
+for i in range(1,199):
+    originals.append(sheet['A{}'.format(i)].value)
+
+new_names = []
+for i in range(1,199):
+    new_names.append(sheet['B{}'.format(i)].value)
+
+
+for i in range(0,198):
+    # print("{} | {}".format(originals[i], new_names[i]))
+    original_with_path = os.path.join(r'H:\Downloads\Server Downloads\Complete\TV Shows (Kids)\Peppa Pig', originals[i])
+    revised_with_path = os.path.join(r'H:\Downloads\Server Downloads\Complete\TV Shows (Kids)\Peppa Pig\new_files', new_names[i])
+    print("{} | {}".format(original_with_path, revised_with_path))
+    shutil.copy(original_with_path, revised_with_path)
+
